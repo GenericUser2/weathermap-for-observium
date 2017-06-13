@@ -21,7 +21,7 @@ mv /opt/observium/html/weathermap/overlib.js /opt/observium/html/overlib.js
 3. Make some directory's writeable or executable by your web server and make folder for maps:
 
 ```
-chown www-data:www-data configs/
+chown -R www-data:www-data configs/
 mkdir maps/
 chown www-data:www-data maps/
 chmod +x map-poller.php
