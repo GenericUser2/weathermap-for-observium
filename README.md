@@ -43,6 +43,12 @@ Output HTML Filename: maps/test.html
 $config['install_dir']   = "/opt/observium";
 ```
 
+7. Change mysql connection parameters in /opt/observium/html/weathermap/lib/datasources/WeatherMapDataSource_observium.php:
+
+```
+$config['install_dir']   = "/opt/observium";
+```
+
 7. Enable the cron process at /etc/cron.d/observium:
 
 ```
