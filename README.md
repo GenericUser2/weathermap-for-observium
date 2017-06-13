@@ -37,14 +37,20 @@ Output Image Filename: test.png
 Output HTML Filename: maps/test.html
 ```
 
-6. Enable the cron process at /etc/cron.d/observium:
+6. Remove "#" from the beginning of $config['install_dir']   = "/opt/observium"; in /opt/observium/includes/defaults.inc.php file:
+
+```
+$config['install_dir']   = "/opt/observium";
+```
+
+7. Enable the cron process at /etc/cron.d/observium:
 
 ```
 # For Weathermap
 */1 * * * * root /opt/observium/html/weathermap/map-poller.php >> /dev/null 2>&1
 ```
 
-7. You can use the navbar-custom.inc.php by putting it into /opt/observium/html/includes/.
+8. You can use the navbar-custom.inc.php by putting it into /opt/observium/html/includes/.
 
 ```
 cp navbar-custom.inc.php /opt/observium/html/includes/navbar-custom.inc.php
