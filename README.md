@@ -29,12 +29,12 @@ chmod +x map-poller.php
 
 4. Point your browser to your install /weathermap/editor.php (i.e http://localhost/weathermap/editor.php)
 
-5. Create your maps, please note when you create a MAP, please click Map Style, ensure Overlib is selected for HTML Style and click submit. Example for test.conf:
+5. Create your maps, please note when you create a MAP, please click Map Style, ensure Overlib is selected for HTML Style and click submit. Example map properties for test.conf:
 
 ```
 Map Title: Test
-Output Image Filename to: test.png
-Output HTML Filename to: maps/test.html
+Output Image Filename: test.png
+Output HTML Filename: maps/test.html
 ```
 
 6. Enable the cron process:
