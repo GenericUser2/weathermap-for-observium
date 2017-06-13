@@ -18,14 +18,7 @@ cd weathermap
 mv /opt/observium/html/weathermap/overlib.js /opt/observium/html/overlib.js
 ```
 
-3. Within editor.php, make sure you set $ENABLED=true:
-```
-...
-$ENABLED=true
-...
-```
-
-4. Make some directory's writeable or executable by your web server and make folder for maps:
+3. Make some directory's writeable or executable by your web server and make folder for maps:
 
 ```
 chown www-data:www-data configs/
@@ -34,9 +27,9 @@ chown www-data:www-data maps/
 chmod +x map-poller.php
 ```
 
-5. Point your browser to your install /weathermap/editor.php (i.e http://localhost/weathermap/editor.php)
+4. Point your browser to your install /weathermap/editor.php (i.e http://localhost/weathermap/editor.php)
 
-6. Create your maps, please note when you create a MAP, please click Map Style, ensure Overlib is selected for HTML Style and click submit. Example for test.conf:
+5. Create your maps, please note when you create a MAP, please click Map Style, ensure Overlib is selected for HTML Style and click submit. Example for test.conf:
 
 ```
 Map Title: Test
@@ -44,14 +37,14 @@ Output Image Filename to: test.png
 Output HTML Filename to: maps/test.html
 ```
 
-7. Enable the cron process:
+6. Enable the cron process:
 
 ```
 # For Weathermap
 */1 * * * * root /opt/observium/html/weathermap/map-poller.php >> /dev/null 2>&1
 ```
 
-8. You can use the navbar-custom.inc.php by putting it into /opt/observium/html/includes/.
+7. You can use the navbar-custom.inc.php by putting it into /opt/observium/html/includes/.
 
 ```
 cp navbar-custom.inc.php /opt/observium/html/includes/navbar-custom.inc.php
