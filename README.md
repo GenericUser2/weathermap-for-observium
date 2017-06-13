@@ -9,12 +9,13 @@ apt-get update
 apt-get install git
 ```
 
-2. Install the Weathermap in the /opt/observium/html folder:
+2. Install the Weathermap in the /opt/observium/html folder and move the overlib.js file one level up:
 
 ```
 cd /opt/observium/html
 git clone https://github.com/akender/weathermap-for-observium.git weathermap
 cd weathermap
+mv /opt/observium/html/weathermap/overlib.js /opt/observium/html/overlib.js
 ```
 
 3. Within editor.php, make sure you set $ENABLED=true:
