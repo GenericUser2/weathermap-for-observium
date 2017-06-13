@@ -46,17 +46,17 @@ $config['install_dir']   = "/opt/observium";
 7. Change mysql connection parameters in /opt/observium/html/weathermap/lib/datasources/WeatherMapDataSource_observium.php:
 
 ```
-$config['install_dir']   = "/opt/observium";
+$con = mysqli_connect("localhost","my_user","my_password","my_db");
 ```
 
-7. Enable the cron process at /etc/cron.d/observium:
+8. Enable the cron process at /etc/cron.d/observium:
 
 ```
 # For Weathermap
 */1 * * * * root /opt/observium/html/weathermap/map-poller.php >> /dev/null 2>&1
 ```
 
-8. You can use the navbar-custom.inc.php by putting it into /opt/observium/html/includes/.
+9. You can use the navbar-custom.inc.php by putting it into /opt/observium/html/includes/.
 
 ```
 cp navbar-custom.inc.php /opt/observium/html/includes/navbar-custom.inc.php
