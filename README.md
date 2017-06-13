@@ -37,7 +37,7 @@ Output Image Filename: test.png
 Output HTML Filename: maps/test.html
 ```
 
-6. Enable the cron process:
+6. Enable the cron process at /etc/cron.d/observium:
 
 ```
 # For Weathermap
