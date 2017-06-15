@@ -285,7 +285,7 @@ if(mysqli_num_rows($result) > 0) {
 		$query .= " AND devices.device_id='$host_id'";
 	}
 	
-	$query .= " ORDER BY devices.sysName,ports.ifIndex";
+	$query .= " ORDER BY devices.sysName,ports.port_label_short";
 	$result = mysqli_query($link,$query);
 
 	// print $SQL_picklist;
