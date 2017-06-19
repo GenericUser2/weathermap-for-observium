@@ -296,7 +296,7 @@ if(mysqli_num_rows($result) > 0) {
 			while ($queryrows = mysqli_fetch_assoc($result)) {
 			echo "<li class=\"row".($i%2)."\">";
 			$key = $queryrows['device_id']."','".$queryrows['hostname']."','".$queryrows['device_name']."','".$queryrows['port_id']."','".$queryrows['label']."','".addslashes($queryrows['alias'])."','".$queryrows['ifIndex']."','".$queryrows['ifHighSpeed'];
-			echo "<a href=\"#\" onclick=\"update_source_step1('$key')\">". $queryrows['device_name'] . " [". $queryrows['ifIndex'] . "] " . $queryrows['label'] . " - " . $queryrows['alias'] . "</a>";
+			echo "<a href=\"#\" onclick=\"update_source_step1('$key')\">". $queryrows['device_name'] . " [". $queryrows['port_id'] . "] " . $queryrows['label'] . " - " . $queryrows['alias'] . "</a>";
 			echo "</li>\n";
 			
 			$i++;
