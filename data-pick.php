@@ -469,7 +469,7 @@ if(mysqli_num_rows($query) > 0) {
 			echo "<li class=\"row".($i%2)."\">";
 			$device_id = $queryrows['device_id'];
 			$hostname = $queryrows['hostname'];
-			$device_name = $queryrows['device_name'];
+			$device_name = explode(".", $queryrows['device_name'])[0];
 			$graph_id = $queryrows['graph_id'];
 			$graph_name = $queryrows['graph_name'];
 			echo "<a href=\"#\" onclick=\"update_source_step1('$device_id','$hostname','$device_name','$graph_id','$graph_name')\">". $device_name . " - " . $graph_name . "</a>";
