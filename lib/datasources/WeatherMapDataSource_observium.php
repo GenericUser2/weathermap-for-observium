@@ -49,11 +49,11 @@ class WeatherMapDataSource_observium extends WeatherMapDataSource {
 			{
 				while ($result = mysqli_fetch_assoc($query))
 				{
-					if($result['status'] == 1) { $state = 3; $statename = 'up'; }
-					if($result['uptime'] < 86400) { $state = 0; $statename = 'rebooted'; }
-					if($result['status'] == 0) { $state = 2; $statename = 'down'; }
-					if($result['disabled'] == 1) { $state = 1; $statename = 'disabled'; }
-					if($result['ignore'] == 1) { $state = 1; $statename = 'ignored'; }
+					if($result['status'] == 1) { $state = 1; $statename = 'up'; }
+					if($result['uptime'] < 86400) { $state = 2; $statename = 'rebooted'; }
+					if($result['status'] == 0) { $state = 3; $statename = 'down'; }
+					if($result['disabled'] == 1) { $state = 4; $statename = 'disabled'; }
+					if($result['ignore'] == 1) { $state = 4; $statename = 'ignored'; }
 				}
 			}
 			mysqli_close($con);
