@@ -147,6 +147,7 @@ function show_editor_startpage()
 	print 'Weathermap that you will be missing out on if you choose to use the editor only.';
 	print 'These include: curves, node offsets, font definitions, colour changing, per-node/per-link settings and image uploading. You CAN use the editor without damaging these features if you added them by hand, however.</div><p>';
 	
+	print '<a href="/weathermap/maps/allmaps.php">All maps page</a><p>';
 	print 'Do you want to:<p>';
 	print 'Create A New Map:<br>';
 	print '<form method="GET">';
