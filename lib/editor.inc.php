@@ -120,7 +120,7 @@ function show_editor_startpage()
 <html lang="en">
 
 <head>
-    <base href="https://observiumbase/" />
+    <base href="'.$GLOBALS['config_weathermap_observiumbase'].'" />
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <!-- META BEGIN -->
@@ -149,271 +149,230 @@ function show_editor_startpage()
     <script type="text/javascript" src="editor-resources/editor.js"></script>
     <!-- JS END -->
     <!--[if lt IE 9]><script src="js/html5shiv.min.js"></script><![endif]-->
-    <!--<title>Kõik kaardid</title>-->
-    <title>Editor - Weathermap - Observium</title>    <link rel="shortcut icon" href="images/observium-icon.png" />
-    <link href="https://observiumbase/feed.php?id=2&amp;hash=65rbgk1hUU815MrOvnr4gjEyJDJMb5n6-mSoHJDo24Y&amp;size=15&amp;feed=eventlog" rel="alternate" title="Observium :: Eventlog Feed" type="application/atom+xml" />
+    <title>Editor - Weathermap - Observium</title>
+    <link rel="shortcut icon" href="images/observium-icon.png" />
+    <link href="'.$GLOBALS['config_weathermap_observiumbase'].'feed.php?id=2&amp;hash=65rbgk1hUU815MrOvnr4gjEyJDJMb5n6-mSoHJDo24Y&amp;size=15&amp;feed=eventlog" rel="alternate" title="Observium :: Eventlog Feed" type="application/atom+xml" />
 </head>
 
 <body>
     ';
-    
-    if ($_SESSION['authenticated']) {
-        include 'weathermap.header.inc.php';
-        print '    <div class="container-fluid">';
-        
-        if ($_SESSION['userlevel'] < 10) {
-            print '
-            <div class="container">
-                <div class="row">
-                    <div class="alert">
-                        <b>WARNING</b> - Userlevel is below 10 ('.$_SESSION['userlevel'].')
-                    </div><!-- alert -->
-                </div><!-- row -->
-            </div><!-- container -->
-        </div><!-- container-fluid -->
-            ';
-        } else {
-            /*print '
-            <div class="container">
-                <div class="row">
-                    <div id="nojs" class="alert">
-                        <b>WARNING</b> - Sorry, it\'s partly laziness on my part, but you really need JavaScript enabled and DOM support in your browser to use this editor. It\'s a visual tool, so accessibility is already an issue, if it is, and from a security viewpoint, you\'re already running my code on your <i>server</i> so either you trust it all having read it, or you\'re already screwed.
-                        <P>If it\'s a major issue for you, please feel free to complain. It\'s mainly laziness as I said, and there could be a fallback (not so smooth) mode for non-javascript browsers if it was seen to be worthwhile (I would take a bit of convincing, because I don\'t see a benefit, personally).</P>
-                    </div><!-- alert -->
-                </div><!-- row -->
-            </div><!-- container -->
-            ';*/
+    include 'weathermap.header.inc.php';
+/*    print '
+    <div class="container">
+        <div class="row">
+            <div id="nojs" class="alert">
+                <b>WARNING</b> - Sorry, it\'s partly laziness on my part, but you really need JavaScript enabled and DOM support in your browser to use this editor. It\'s a visual tool, so accessibility is already an issue, if it is, and from a security viewpoint, you\'re already running my code on your <i>server</i> so either you trust it all having read it, or you\'re already screwed.
+                <P>If it\'s a major issue for you, please feel free to complain. It\'s mainly laziness as I said, and there could be a fallback (not so smooth) mode for non-javascript browsers if it was seen to be worthwhile (I would take a bit of convincing, because I don\'t see a benefit, personally).</P>
+            </div><!-- alert -->
+    ';*/
 
-            $errormessage = "";
+	$errormessage = "";
 
-            if ($configerror!='') {
-                $errormessage .= $configerror.'<p>';
-            }
-
-            if ( !$observium_found && !$ignore_observium) {
-                //$errormessage .= '$cacti_base is not set correctly. Cacti integration will be disabled in the editor.';
-                //$errormessage .= "$observium_found and $ignore_observium";
-                //if ($config_loaded != 1) { 
-                        //$errormessage .= " You might need to copy editor-config.php-dist to editor-config.php and edit it."; 
-                    //}
-            }
-
-            if ($errormessage != '') {
-                print '<div class="alert" id="nocacti">'.htmlspecialchars($errormessage).'</div>';
-            }
-
-            print'
-                <div class="row">
-                    <div id="withjs">
-                        <h1>PHP Weathermap '.$WEATHERMAP_VERSION.' editor</h1>
-                        <div class="col-md-8">
-                            <div class="box box-solid">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Edit</h3>
-                                </div>
-                                <div class="box-body no-padding">
-                                    <div style="padding 10px;">
-                                       Create A New Map:<br>
-                                       <form method="GET" class="form form-horizontal">Named:
-                                           <input type="text" name="mapname" placeholder="example.conf" size="20">
-                                           <input name="action" type="hidden" value="newmap">
-                                           <input name="plug" type="hidden" value="'.$fromplug.'">
-                                           <button id="submit" name="submit" type="submit" class="btn btn-primary text-nowrap" value="Create"><i class="icon-ok icon-white"></i>&nbsp;Create</button>
-                                           OR
-                                       </form>
-            ';
-
-            $titles = array();
-
-            $errorstring="";
-
-            if (is_dir($mapdir)) {
-                $n=0;
-                $dh=opendir($mapdir);
-
-                if ($dh) {
-                    while (false !== ($file = readdir($dh))) {
-                    $realfile=$mapdir . DIRECTORY_SEPARATOR . $file;
-                    $note = "";
-
-                    // skip directories, unreadable files, .files and anything that doesn't come through the sanitiser unchanged
-                    if ( (is_file($realfile)) && (is_readable($realfile)) && (!preg_match("/^\./",$file) )  && ( wm_editor_sanitize_conffile($file) == $file ) ) {
-                        if (!is_writable($realfile)) {
-                            $note .= "(read-only)";
-                        }
-                        $title='(no title)';
-                        $fd=fopen($realfile, "r");
-                        if ($fd) {
-                            while (!feof($fd)) {
-                                $buffer=fgets($fd, 4096);
-
-                                if (preg_match("/^\s*TITLE\s+(.*)/i", $buffer, $matches)) { 
-                                    $title= wm_editor_sanitize_string($matches[1]); 
-                                }
-                            }
-
-                            fclose ($fd);
-                            $titles[$file] = $title;
-                            $notes[$file] = $note;
-                            $n++;
-                        }
-                    }
-                    }
-
-                    closedir ($dh);
-                } else { 
-                    $errorstring = "Can't open mapdir to read."; 
-                }
-
-                ksort($titles);
-
-                if ($n == 0) { 
-                    $errorstring = "No files in mapdir"; 
-                }
-            } else { 
-                $errorstring = "NO DIRECTORY named $mapdir"; 
-            }
-
-            print '
-                                       Create A New Map as a copy of an existing map:
-                                       <form method="GET" class="form form-horizontal">Named:
-                                           <input type="text" name="mapname" placeholder="example.conf" size="20"> based on
-                                           <input name="action" type="hidden" value="newmapcopy">
-                                           <input name="plug" type="hidden" value="'.$fromplug.'">
-                                           <select name="sourcemap">
-            ';
-
-            if ($errorstring == '') {
-                foreach ($titles as $file=>$title) {
-                    $nicefile = htmlspecialchars($file);
-                    print "<option value=\"$nicefile\">$nicefile</option>\n";
-                }
-            } else {
-                print '<option value="">'.htmlspecialchars($errorstring).'</option>';
-            }
-
-            print '
-                                           </select>
-                                           <button id="submit" name="submit" type="submit" class="btn btn-primary text-nowrap" value="Create Copy"><i class="icon-ok icon-white"></i>&nbsp;Create Copy</button>
-                                           OR
-                                       </form>
-                                       Open An Existing Map (looking in '.htmlspecialchars($mapdir).'):
-                                    </div>
-                                    <table class="table table-hover table-striped  table-condensed ">
-                                        <thead>
-                                            <tr>
-                                                <th>Note</th>
-                                                <th>File name</th>
-                                                <th>Map name</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-            ';
-
-            if ($errorstring == '') {
-                foreach ($titles as $file=>$title) {			
-                    # $title = $titles[$file];
-                    $note = $notes[$file];
-                    $nicefile = htmlspecialchars($file);
-                    $nicetitle = htmlspecialchars($title);
-                    print '
-                                            <tr onclick="openLink(\'weathermap/editor.php?mapname='.$nicefile.'&plug='.$fromplug.'\')" style="cursor: pointer;">
-                                                <td>'.$note.'</td>
-                                                <td><span class="entity-title"><a href="weathermap/editor.php?mapname='.$nicefile.'&plug='.$fromplug.'" class="entity-popup">'.$nicefile.'</a></span></td>
-                                                <td>'.$nicetitle.'</td>
-                                            </tr>
-                    ';
-                }
-            } else {
-                print '<tr><td colspan="2">'.htmlspecialchars($errorstring).'</td></tr>';
-            }
-
-            print '
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div><!-- box-solid -->
-                        </div><!-- col-md-8 -->
-            ';
-
-            $htmlfiles = array();
-            if ($handle = opendir('./maps')) {
-                $i = 0;
-                while (false !== ($entry = readdir($handle))) {
-                    if (strpos($entry, '.html') !== false) {
-                        $htmlfiles[$i] = $entry;
-                        $i++;
-                    }
-                }
-                closedir($handle);
-            }
-            sort($htmlfiles);
-
-            print '
-                        <div class="col-md-4">
-                            <div class="box box-solid">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">View</h3>
-                                    <span class="label">'.count($htmlfiles).'</span>
-                                </div>
-                                <div class="box-body no-padding">
-                                   <table class="table table-hover table-striped  table-condensed ">
-                                        <thead>
-                                            <tr>
-                                                <th>File name</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-            ';
-
-            if ($errorstring == '') {
-                foreach ($htmlfiles as $htmlfile) {
-                    $nicefile = htmlspecialchars($htmlfile);
-                    print '
-                                            <tr onclick="openLink(\'weathermap/maps/'.$nicefile.'\')" style="cursor: pointer;">
-                                                <td><span class="entity-title"><a href="weathermap/maps/'.$nicefile.'" class="entity-popup">'.$nicefile.'</a></span></td>
-                                            </tr>
-                    ';
-                }
-            } else {
-                print '<tr><td>'.htmlspecialchars($errorstring).'</td></tr>';
-            }
-
-            print '
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div><!-- box-solid -->
-                        </div><!-- col-md-4 -->
-                    </div><!-- withjs -->
-                </div><!-- row -->
-                ';
-            print '
-                <div class="navbar navbar-fixed-bottom">
-                    <div class="navbar-inner">
-                        <div class="container">
-                            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                                <span class="oicon-bar"></span>
-                                <span class="oicon-bar"></span>
-                                <span class="oicon-bar"></span>
-                            </a>
-                            <div class="nav-collapse">
-                                <ul class="nav">
-                                    <li class="dropdown">PHP Weathermap Editor '.$WEATHERMAP_VERSION.'</li>
-                                </ul>
-                            </div><!-- nav-collapse -->
-                        </div><!-- container -->
-                    </div><!-- navbar-inner -->
-                </div><!-- navbar-fixed-bottom -->
-                ';
-            print '
-            </div><!-- container -->
-            ';
-        }
-    } else {
-        include("../../html/pages/logon.inc.php");
+    if ($configerror!='') {
+        $errormessage .= $configerror.'<p>';
     }
+		
+	if ( !$observium_found && !$ignore_observium) {
+		//$errormessage .= '$cacti_base is not set correctly. Cacti integration will be disabled in the editor.';
+		//$errormessage .= "$observium_found and $ignore_observium";
+		//if ($config_loaded != 1) { 
+            	//$errormessage .= " You might need to copy editor-config.php-dist to editor-config.php and edit it."; 
+        	//}
+	}
+	
+	if ($errormessage != '') {
+		print '<div class="alert" id="nocacti">'.htmlspecialchars($errormessage).'</div>';
+	}
+
+    print'
+            <div id="withjs">
+                <h1>PHP Weathermap '.$WEATHERMAP_VERSION.' editor</h1>
+                <div class="col-md-8">
+                    <div class="box box-solid">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Edit</h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            <div style="padding 10px;">
+                               Create A New Map:<br>
+                               <form method="GET" class="form form-horizontal">Named:
+                                   <input type="text" name="mapname" placeholder="example.conf" size="20">
+                                   <input name="action" type="hidden" value="newmap">
+                                   <input name="plug" type="hidden" value="'.$fromplug.'">
+                                   <button id="submit" name="submit" type="submit" class="btn btn-primary text-nowrap" value="Create"><i class="icon-ok icon-white"></i>&nbsp;Create</button>
+                                   OR
+                               </form>
+    ';
     
+    $titles = array();
+
+	$errorstring="";
+
+	if (is_dir($mapdir)) {
+		$n=0;
+		$dh=opendir($mapdir);
+
+		if ($dh) {
+		    while (false !== ($file = readdir($dh))) {
+			$realfile=$mapdir . DIRECTORY_SEPARATOR . $file;
+			$note = "";
+	
+			// skip directories, unreadable files, .files and anything that doesn't come through the sanitiser unchanged
+			if ( (is_file($realfile)) && (is_readable($realfile)) && (!preg_match("/^\./",$file) )  && ( wm_editor_sanitize_conffile($file) == $file ) ) {
+				if (!is_writable($realfile)) {
+					$note .= "(read-only)";
+				}
+				$title='(no title)';
+				$fd=fopen($realfile, "r");
+				if ($fd) {
+					while (!feof($fd)) {
+						$buffer=fgets($fd, 4096);
+	
+						if (preg_match("/^\s*TITLE\s+(.*)/i", $buffer, $matches)) { 
+						    $title= wm_editor_sanitize_string($matches[1]); 
+						}
+					}
+	
+					fclose ($fd);
+					$titles[$file] = $title;
+					$notes[$file] = $note;
+					$n++;
+				}
+			}
+		    }
+
+		    closedir ($dh);
+		} else { 
+            $errorstring = "Can't open mapdir to read."; 
+        }
+		
+		ksort($titles);
+		
+		if ($n == 0) { 
+		    $errorstring = "No files in mapdir"; 
+		}
+	} else { 
+	    $errorstring = "NO DIRECTORY named $mapdir"; 
+	}
+    
+    print '
+                               Create A New Map as a copy of an existing map:
+                               <form method="GET" class="form form-horizontal">Named:
+                                   <input type="text" name="mapname" placeholder="example.conf" size="20"> based on
+                                   <input name="action" type="hidden" value="newmapcopy">
+                                   <input name="plug" type="hidden" value="'.$fromplug.'">
+                                   <select name="sourcemap">
+    ';
+    
+    if ($errorstring == '') {
+		foreach ($titles as $file=>$title) {
+			$nicefile = htmlspecialchars($file);
+			print "<option value=\"$nicefile\">$nicefile</option>\n";
+		}
+	} else {
+		print '<option value="">'.htmlspecialchars($errorstring).'</option>';
+	}
+    
+    print '
+                                   </select>
+                                   <button id="submit" name="submit" type="submit" class="btn btn-primary text-nowrap" value="Create Copy"><i class="icon-ok icon-white"></i>&nbsp;Create Copy</button>
+                                   OR
+                               </form>
+                               Open An Existing Map (looking in '.htmlspecialchars($mapdir).'):
+                            </div>
+                            <table class="table table-hover table-striped  table-condensed ">
+                                <thead>
+                                    <tr>
+                                        <th>Note</th>
+                                        <th>File name</th>
+                                        <th>Map name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+    ';
+    
+    if ($errorstring == '') {
+		foreach ($titles as $file=>$title) {			
+			# $title = $titles[$file];
+			$note = $notes[$file];
+			$nicefile = htmlspecialchars($file);
+			$nicetitle = htmlspecialchars($title);
+            print '
+                                    <tr onclick="openLink(\'weathermap/editor.php?mapname='.$nicefile.'&plug='.$fromplug.'\')" style="cursor: pointer;">
+                                        <td>'.$note.'</td>
+                                        <td><span class="entity-title"><a href="weathermap/editor.php?mapname='.$nicefile.'&plug='.$fromplug.'" class="entity-popup">'.$nicefile.'</a></span></td>
+                                        <td>'.$nicetitle.'</td>
+                                    </tr>
+            ';
+		}
+	} else {
+		print '<tr><td colspan="2">'.htmlspecialchars($errorstring).'</td></tr>';
+	}
+    
+    print '
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- box-solid -->
+                </div><!-- col-md-8 -->
+    ';
+    
+    $htmlfiles = array();
+    if ($handle = opendir('./maps')) {
+        $i = 0;
+        while (false !== ($entry = readdir($handle))) {
+            if (strpos($entry, '.html') !== false) {
+                $htmlfiles[$i] = $entry;
+                $i++;
+            }
+        }
+        closedir($handle);
+    }
+    sort($htmlfiles);
+    
+    print '
+                <div class="col-md-4">
+                    <div class="box box-solid">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">View</h3>
+                            <span class="label">'.count($htmlfiles).'</span>
+                        </div>
+                        <div class="box-body no-padding">
+                           <table class="table table-hover table-striped  table-condensed ">
+                                <thead>
+                                    <tr>
+                                        <th>File name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+    ';
+    
+    if ($errorstring == '') {
+		foreach ($htmlfiles as $htmlfile) {
+			$nicefile = htmlspecialchars($htmlfile);
+            print '
+                                    <tr onclick="openLink(\'weathermap/maps/'.$nicefile.'\')" style="cursor: pointer;">
+                                        <td><span class="entity-title"><a href="weathermap/maps/'.$nicefile.'" class="entity-popup">'.$nicefile.'</a></span></td>
+                                    </tr>
+            ';
+		}
+	} else {
+		print '<tr><td>'.htmlspecialchars($errorstring).'</td></tr>';
+	}
+    
+    print '
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- box-solid -->
+                </div><!-- col-md-4 -->
+            </div><!-- withjs -->
+        </div><!-- row -->
+    ';
+    include 'weathermap.footer.inc.php';
+    print '
+    </div><!-- container -->
+    ';
     print '
 </body>
 </html>
