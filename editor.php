@@ -1,6 +1,6 @@
 <?php
 	
-require_once 'lib/editor.inc.php';
+require_once 'lib/editor.inc_test.php';
 require_once 'lib/Weathermap.class.php';
 
 // so that you can't have the editor active, and not know about it.
@@ -13,15 +13,15 @@ if(! $ENABLED)
     exit();
 }
 
+$config_loaded = @include_once 'editor-config.php';
+
 // sensible defaults
-$mapdir='configs';
+$mapdir = $GLOBALS['config_weathermap_mapdir'];
 $observium_base = '../../';
 $observium_url = '/';
 $ignore_observium=FALSE;
 $configerror = '';
 $whats_installed = '';
-
-$config_loaded = @include_once 'editor-config.php';
 
 // these are all set via the Editor Settings dialog, in the editor, now.
 $use_overlay = FALSE; // set to TRUE to enable experimental overlay showing VIAs
@@ -42,45 +42,43 @@ if( isset($config) )
     $configerror = 'OLD editor config file format. The format of this file changed in version 0.92 - please check the new editor-config.php-dist and update your editor-config.php file. [WMEDIT02]';
 }
 
-// FOR DEBUGGING
-/*ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);*/
-
 // check if the goalposts have moved
 if( is_dir($observium_base) && file_exists($observium_base."/config.php") )
 {
-	//include_once($observium_base."/config.php");
-	//include_once($observium_base."html/includes/defaults.inc.php");
-	//include_once($observium_base."html/includes/definitions.inc.php");
-	//include_once($observium_base."html/includes/functions.php");
-    include($observium_base."includes/sql-config.inc.php");
-	include_once($observium_base."html/includes/functions.inc.php");
-	include_once($observium_base."html/includes/authenticate.inc.php");
-	//$config['base_url'] = $observium_url;
+	// include the cacti-config, so we know about the database
+	include_once($observium_base."/config.php");
+	include_once($observium_base."/includes/defaults.inc.php");
+    
+	//include_once($observium_base."/includes/definitions.inc.php");
+	//include_once($observium_base."/includes/functions.php");
+    
+	//include_once($observium_base."html/includes/functions.inc.php");
+	//include_once($observium_base."html/includes/authenticate.inc.php");
+    
+	//$config['base_url'] = $cacti_url;
 	$observium_found = TRUE;
-    if($config['project_name'] == 'LibreNMS') {
-        $whats_installed = 'LibreNMS';
-    } else {
-        $whats_installed = 'Observium';
-    }
+        if($config['project_name'] == 'LibreNMS') {
+                $whats_installed = 'LibreNMS';
+        } else {
+                $whats_installed = 'Observium';
+        }
 }
 else
 {
 	$observium_found = FALSE;
 }
-
-/*if ($_SESSION['userlevel'] < 10)
+/*
+if ($_SESSION['userlevel'] < '5')
 {
-  include($observium_base."../includes/error-no-perm.inc.php");
+  include("$observium_base/html/includes/error-no-perm.inc.php");
 } else {
 	print "<p>pask</p>";
 }
 if($observium_found && isset($plugins))
 {
 	print "<p>here, we know we're part of a plugin - do auth stuff</p>";
-}*/
-
+}
+*/
 if(! is_writable($mapdir))
 {
 	$configerror = "The map config directory is not writable by the web server user. You will not be able to edit any files until this is corrected. [WMEDIT01]";
@@ -1553,4 +1551,3 @@ else
 // vim:ts=4:sw=4:
 //}
 ?>
-
