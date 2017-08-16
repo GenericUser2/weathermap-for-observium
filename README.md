@@ -22,8 +22,7 @@ mv /opt/observium/html/weathermap/overlib.js /opt/observium/html/overlib.js
 
 ```
 chown -R www-data:www-data configs/
-mkdir maps/
-chown www-data:www-data maps/
+chown -R www-data:www-data maps/
 chmod +x map-poller.php
 ```
 
