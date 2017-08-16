@@ -61,6 +61,8 @@ Output Image Filename: test.png
 Output HTML Filename: maps/test.html
 ```
 
+10. You may edit "editor-config.php" file to define groups for maps. Grouping based on the key occurrences in filenames of maps.
+
 **** IMPORTANT SECURITY *****
 
 It is highly recommended that you set $ENABLED=false in editor.php when you are not editing maps as this is accessible by anyone unless you secure it via .htaccess or your web server config.
