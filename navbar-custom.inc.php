@@ -27,5 +27,5 @@ $navbar['weathermap']['entries'][] = array('title' => 'Weathermaps', 'url' => ge
 if ($_SESSION['userlevel'] >= '10') {
     $navbar['weathermap']['entries'][] = array('title' => 'Weathermap Editor', 'url' => 'weathermap/editor.php', 'icon' => 'oicon-gear');
 }
-
+ 
 ?>
