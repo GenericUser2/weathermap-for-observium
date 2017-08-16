@@ -61,7 +61,8 @@ Output Image Filename: test.png
 Output HTML Filename: maps/test.html
 ```
 
-10. You may edit "editor-config.php" file to define groups for maps. Grouping based on the key occurrences in filenames of maps.
+10. You may edit "editor-config.php" file to define groups for maps. Grouping based on the key occurrences in png filenames of maps. 
+For group with key "gr1" match all png files with pattern gr1*.png, for group with key "gr2" match all png files with pattern gr2*.png and so on.
 
 **** IMPORTANT SECURITY *****
 
