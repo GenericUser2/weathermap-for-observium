@@ -67,7 +67,7 @@ if ($_SESSION['authenticated']) {
         ';
     } else {
         if(isset($_GET["submap"])) {
-            echo '        <h1>PHP Weathermap "'.$groups[$_GET["submap"]].'" maps:</h1>';
+            echo '        <h1>PHP Weathermap "'.$GLOBALS['config_weathermap_groups'][$_GET["submap"]].'" maps:</h1>';
         } else {
             echo '        <h1>PHP Weathermap all maps:</h1>';
         }
@@ -95,7 +95,7 @@ if ($_SESSION['authenticated']) {
             echo '<div class="box box-solid">
                     <div class="box-header">
                         <i class="oicon-map"></i>
-                        <a href="weathermap/maps/allmaps.php?submap='.$_GET["submap"].'"><h3 class="box-title">'.$groups[$_GET["submap"]].' </h3></a>
+                        <a href="weathermap/maps/allmaps.php?submap='.$_GET["submap"].'"><h3 class="box-title">'.$GLOBALS['config_weathermap_groups'][$_GET["submap"]].' </h3></a>
                         <span class="label">'.count($pngfiles).'</span>
                     </div>
                     <div class="box-body spacing">
