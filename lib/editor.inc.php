@@ -120,7 +120,7 @@ function show_editor_startpage()
 <html lang="en">
 
 <head>
-    <base href="https://observium.just.sise:443/" />
+    <base href="https://observiumbase/" />
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <!-- META BEGIN -->
@@ -151,7 +151,7 @@ function show_editor_startpage()
     <!--[if lt IE 9]><script src="js/html5shiv.min.js"></script><![endif]-->
     <!--<title>Kõik kaardid</title>-->
     <title>Editor - Weathermap - Observium</title>    <link rel="shortcut icon" href="images/observium-icon.png" />
-    <link href="https://observium.just.sise:443/feed.php?id=2&amp;hash=65rbgk1hUU815MrOvnr4gjEyJDJMb5n6-mSoHJDo24Y&amp;size=15&amp;feed=eventlog" rel="alternate" title="Observium :: Eventlog Feed" type="application/atom+xml" />
+    <link href="https://observiumbase/feed.php?id=2&amp;hash=65rbgk1hUU815MrOvnr4gjEyJDJMb5n6-mSoHJDo24Y&amp;size=15&amp;feed=eventlog" rel="alternate" title="Observium :: Eventlog Feed" type="application/atom+xml" />
 </head>
 
 <body>
