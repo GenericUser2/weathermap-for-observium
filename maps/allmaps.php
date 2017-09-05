@@ -8,6 +8,7 @@ require_once $observium_base.'includes/sql-config.inc.php';
 require_once $observium_base.'html/includes/functions.inc.php';
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
