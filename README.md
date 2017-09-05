@@ -51,7 +51,7 @@ $con = mysqli_connect("localhost","obs_db_user","obs_db_password","obs_db");
 cp navbar-custom.inc.php /opt/observium/html/includes/navbar-custom.inc.php
 ```
 
-8. Edit the /opt/observium/html/weathermap/editor-config.php file and make sure that observiumbase have right value.
+8. Edit the /opt/observium/html/weathermap/editor-config.php file and make sure that observiumbase have right value (i.e http://localhost/).
 
 ```
 $config_weathermap_observiumbase    = 'https://yoursite.com:443/';
