@@ -44,7 +44,7 @@ class WeatherMapDataSource_observium extends WeatherMapDataSource {
 			$state = 0; // 0 by default
 			$statename = 'unknown'; // unknown by default
 
-			$con = mysqli_connect('localhost','root','observium','observium');
+			$con = mysqli_connect('localhost','obs_db_user','obs_db_password','obs_db');
 			if ($query = mysqli_query($con,$SQL))
 			{
 				while ($result = mysqli_fetch_assoc($query))
