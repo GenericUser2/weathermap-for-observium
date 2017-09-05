@@ -51,9 +51,15 @@ $con = mysqli_connect("localhost","obs_db_user","obs_db_password","obs_db");
 cp navbar-custom.inc.php /opt/observium/html/includes/navbar-custom.inc.php
 ```
 
-8. Point your browser to your install /weathermap/editor.php (i.e http://localhost/weathermap/editor.php)
+8. Edit the /opt/observium/html/weathermap/editor-config.php file and make sure that observiumbase have right value.
 
-9. Create your maps, please note when you create a MAP, please click Map Style, ensure Overlib is selected for HTML Style and click submit. Example map properties for test.conf:
+```
+$config_weathermap_observiumbase    = 'https://yoursite.com:443/';
+```
+
+9. Point your browser to your install /weathermap/editor.php (i.e http://localhost/weathermap/editor.php)
+
+10. Create your maps, please note when you create a MAP, please click Map Style, ensure Overlib is selected for HTML Style and click submit. Example map properties for test.conf:
 
 ```
 Map Title: Test
@@ -61,7 +67,7 @@ Output Image Filename: test.png
 Output HTML Filename: maps/test.html
 ```
 
-10. You may edit "editor-config.php" file to define groups for maps. Grouping based on the key occurrences in png filenames of maps. 
+11. You may edit "editor-config.php" file to define groups for maps. Grouping based on the key occurrences in png filenames of maps. 
 For group with key "gr1" match all png files with pattern gr1*.png, for group with key "gr2" match all png files with pattern gr2*.png and so on.
 
 **** IMPORTANT SECURITY *****
