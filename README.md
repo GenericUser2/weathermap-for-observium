@@ -35,7 +35,7 @@ $config['install_dir']   = "/opt/observium";
 5. Change mysql connection parameters in /opt/observium/html/weathermap/lib/datasources/WeatherMapDataSource_observium.php:
 
 ```
-$con = mysqli_connect("localhost","my_user","my_password","my_db");
+$con = mysqli_connect("localhost","obs_db_user","obs_db_password","obs_db");
 ```
 
 6. Enable the cron process at /etc/cron.d/observium:
